@@ -6,22 +6,25 @@ http://www.cnblogs.com/qiyeboy/p/5693128.html
 <br/>
 最近正在为IPProxyPool添加二级代理，方便调度。大家可以关注我的公众号，更新我会及时通知。
 <br/>
-####我的微信公众号:
-<br/>
+
+#### 我的微信公众号:
+
 ![](qiye2.jpg)
 <br/>
 希望大家提供更多的代理网站，现在爬取的好用的代理ip还是太少。
 <br/>
 同时感谢[super1-chen](https://github.com/super1-chen),[fancoo](https://github.com/fancoo),[Leibnizhu](https://github.com/Leibnizhu)对项目的贡献。
 <br/>
-##项目依赖
-####Ubuntu,debian
-<br/>
+
+## 项目依赖
+
+#### Ubuntu,debian
+
 1.安装sqlite数据库(一般系统内置):
 apt-get install sqlite3
 <br/>
-2.安装requests,chardet,web.py,gevent:
-pip install requests chardet web.py sqlalchemy gevent
+2.安装requests,chardet,web.py,gevent psutil:
+pip install requests chardet web.py sqlalchemy gevent psutil
 <br/>
 3.安装lxml:
 apt-get install python-lxml
@@ -32,7 +35,8 @@ apt-get install python-lxml
 * 有时候使用的gevent版本过低会出现自动退出情况，请使用pip install gevent --upgrade更新)
 * 在python3中安装web.py，不能使用pip，直接下载py3版本的[源码](https://codeload.github.com/webpy/webpy/zip/py3)进行安装
 
-####Windows
+#### Windows
+
 1.下载[sqlite](http://www.sqlite.org/download.html),路径添加到环境变量
 <br/>
 2.安装requests,chardet,web.py,gevent:
@@ -47,7 +51,8 @@ pip install lxml或者下载[lxml windows版](https://pypi.python.org/pypi/lxml/
 * 有时候使用的gevent版本过低会出现自动退出情况，请使用pip install gevent --upgrade更新)
 * 在python3中安装web.py，不能使用pip，直接下载py3版本的[源码](https://codeload.github.com/webpy/webpy/zip/py3)进行安装
 
-####扩展说明
+#### 扩展说明
+
 本项目默认数据库是sqlite，但是采用sqlalchemy的ORM模型，通过预留接口可以拓展使用MySQL，MongoDB等数据库。
 配置方法：
 <br/>
@@ -79,7 +84,9 @@ sqlalchemy下的DB_CONNECT_STRING参考[支持数据库](http://docs.sqlalchemy.
         }
 ```
 由于sqlalchemy并不支持MongoDB,因此额外添加了pymongo模式，DB_CONNECT_STRING参考pymongo的连接字符串。
-#####注意
+
+##### 注意
+
 如果大家想拓展其他数据库，可以直接继承db下ISqlHelper类，实现其中的方法，具体实现参考我的代码，然后在DataStore中导入类即可。
 ```
 try:
@@ -93,6 +100,7 @@ except Exception,e:
     raise Con_DB_Fail
 ```
 有感兴趣的朋友，可以将Redis的实现方式添加进来。
+
 
 ## 如何使用
 
@@ -127,8 +135,8 @@ IPProxyPool----->>>>>>>>Success ip num :134,Fail ip num:7882
 GET /
 ```
 这种模式用于查询代理ip数据，同时加入评分机制，返回数据的顺序是按照评分由高到低，速度由快到慢制定的。
-####参数 
 
+#### 参数 
 
 | Name | Type | Description |
 | ----| ---- | ---- |
@@ -141,8 +149,11 @@ GET /
 
 
 #### 例子
-#####IPProxys默认端口为8000，端口可以在config.py中配置。
-#####如果是在本机上测试：
+
+##### IPProxys默认端口为8000,端口可以在config.py中配置。
+
+##### 如果是在本机上测试：
+
 1.获取5个ip地址在中国的高匿代理：http://127.0.0.1:8000/?types=0&count=5&country=国内
 <br/>
 2.响应为JSON格式，按照评分由高到低，响应速度由高到低的顺序，返回数据：
@@ -152,6 +163,7 @@ GET /
 ```
 <br/>
 以["122.226.189.55", 138, 10]为例，第一个元素是ip,第二个元素是port，第三个元素是分值score。
+
 ```
 import requests
 import json
@@ -173,8 +185,8 @@ print r.text
 GET /delete
 ```
 这种模式用于方便用户根据自己的需求删除代理ip数据
-####参数 
 
+#### 参数 
 
 | Name | Type | Description |
 | ----| ---- | ---- |
@@ -185,27 +197,128 @@ GET /delete
 | count | int | 数量 |
 | country | str | 取值为 国内, 国外 |
 | area | str | 地区 |
+
 大家可以根据指定以上一种或几种方式删除数据。
+
 #### 例子
-#####如果是在本机上测试：
+
+##### 如果是在本机上测试：
+
 1.删除ip为120.92.3.127的代理：http://127.0.0.1:8000/delete?ip=120.92.3.127
 <br/>
 2.响应为JSON格式，返回删除的结果为成功,失败或者返回删除的个数,类似如下的效果：
-
 ["deleteNum", "ok"]或者["deleteNum", 1]
 ```
 import requests
 r = requests.get('http://127.0.0.1:8000/delete?ip=120.92.3.127')
 print r.text
 ```
+## config.py参数配置
+```
+#parserList是网址解析规则表,大家可以将发现的代理网址,将提取规则添加到其中,方便爬虫的爬取。
+parserList = [
+    {
+        'urls': ['http://www.66ip.cn/%s.html' % n for n in ['index'] + list(range(2, 12))],
+        'type': 'xpath',
+        'pattern': ".//*[@id='main']/div/div[1]/table/tr[position()>1]",
+        'position': {'ip': './td[1]', 'port': './td[2]', 'type': './td[4]', 'protocol': ''}
+    },
+    
+   ......
+ 
+   
+    {
+        'urls': ['http://www.cnproxy.com/proxy%s.html' % i for i in range(1, 11)],
+        'type': 'module',
+        'moduleName': 'CnproxyPraser',
+        'pattern': r'<tr><td>(\d+\.\d+\.\d+\.\d+)<SCRIPT type=text/javascript>document.write\(\"\:\"(.+)\)</SCRIPT></td><td>(HTTP|SOCKS4)\s*',
+        'position': {'ip': 0, 'port': 1, 'type': -1, 'protocol': 2}
+    }
+]
 
+#数据库的配置
+
+DB_CONFIG = {
+
+    'DB_CONNECT_TYPE': 'sqlalchemy',  # 'pymongo'sqlalchemy;redis
+    # 'DB_CONNECT_STRING':'mongodb://localhost:27017/'
+    'DB_CONNECT_STRING': 'sqlite:///' + os.path.dirname(__file__) + '/data/proxy.db'
+    # DB_CONNECT_STRING : 'mysql+mysqldb://root:root@localhost/proxy?charset=utf8'
+
+    # 'DB_CONNECT_TYPE': 'redis',  # 'pymongo'sqlalchemy;redis
+    # 'DB_CONNECT_STRING': 'redis://localhost:6379/8',
+
+}
+#THREADNUM为gevent pool的协程数目
+THREADNUM = 5
+
+#API_PORT为API web服务器的端口
+API_PORT = 8000
+
+#爬虫爬取和检测ip的设置条件
+#不需要检测ip是否已经存在，因为会定时清理
+# UPDATE_TIME:每半个小时检测一次是否有代理ip失效
+UPDATE_TIME = 30 * 60 
+
+# 当有效的ip值小于MINNUM时 需要启动爬虫进行爬取
+MINNUM = 50  
+
+# socket超时
+TIMEOUT = 5 
+
+
+
+
+#爬虫下载网页的重试次数
+RETRY_TIME = 3
+
+
+#USER_AGENTS 随机头信息,用来突破爬取网站的反爬虫
+
+USER_AGENTS = [
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; AcooBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
+    "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; Acoo Browser; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506)",
+    "Mozilla/4.0 (compatible; MSIE 7.0; AOL 9.5; AOLBuild 4337.35; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
+    "Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)",
+    "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET CLR 2.0.50727; Media Center PC 6.0)",
+    "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET CLR 1.0.3705; .NET CLR 1.1.4322)",
+    "Mozilla/4.0 (compatible; MSIE 7.0b; Windows NT 5.2; .NET CLR 1.1.4322; .NET CLR 2.0.50727; InfoPath.2; .NET CLR 3.0.04506.30)",
+   ]
+#默认给抓取的ip分配20分,每次连接失败,减一分,直到分数全部扣完从数据库中删除
+DEFAULT_SCORE=10
+
+#CHECK_PROXY变量是为了用户自定义检测代理的函数,，默认是CHECK_PROXY={'function':'checkProxy'}。
+#现在使用检测的网址是httpbin.org,但是即使ip通过了验证和检测
+#也只能说明通过此代理ip可以到达httpbin.org,但是不一定能到达用户爬取的网址
+#因此在这个地方用户可以自己添加检测函数,我以百度为访问网址尝试一下
+#大家可以看一下Validator.py文件中的baidu_check函数和detect_proxy函数就会明白
+
+CHECK_PROXY={'function':'checkProxy'}#{'function':'baidu_check'}
+```
 ## TODO
-1.添加二级代理，简化爬虫配置
+1.添加squid代理，简化爬虫配置
 <br/>
 
 
 ## 更新进度
+-----------------------------2017-4-6----------------------------
+<br/>
+1.更新评分机制。
+<br/>
+* 之前的评分机制是刚添加进来每个代理ip为0分，每隔半个小时检测一次，检测之后依然有效则加分，无效则删除。
+* 现在的评分机制是每个新的代理ip分配10分,每隔半个小时检测一次，检测之后依然有效则分数不变，无效则分数减一,直至为0删除,可以避免由于检测网站不稳定导致的误删。
 
+2.用户可以自定义检测函数,在config.py的CHECK_PROXY变量中可以配置。
+```
+CHECK_PROXY变量是为了用户自定义检测代理的函数，默认是CHECK_PROXY={'function':'checkProxy'}
+现在使用检测的网址是httpbin.org,但是即使ip通过了验证和检测
+也只能说明通过此代理ip可以到达httpbin.org,但是不一定能到达用户爬取的网址
+因此在这个地方用户可以自己添加检测函数,我以百度为访问网址尝试一下
+大家可以看一下Validator.py文件中的baidu_check函数和detect_proxy函数就会明白。
+
+CHECK_PROXY={'function':'baidu_check'}
+```
+3.经过大家的共同努力,彻底解决了僵死进程的问题。
 
 -----------------------------2017-1-16----------------------------
 <br/>
