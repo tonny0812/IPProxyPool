@@ -1,5 +1,5 @@
 # coding:utf-8
-import config
+from application import config
 
 
 class Test_URL_Fail(Exception):

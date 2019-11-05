@@ -9,12 +9,12 @@ import gevent
 from gevent.pool import Pool
 from multiprocessing import Queue, Process, Value
 
-from api.apiServer import start_api_server
-from config import THREADNUM, parserList, UPDATE_TIME, MINNUM
-from db.DataStore import store_data, sqlhelper
-from spider.HtmlDownloader import Html_Downloader
-from spider.HtmlPraser import Html_Parser
-from validator.Validator import validator, getMyIP, detect_from_db
+from application.api import start_api_server
+from application.config import THREADNUM, parserList, UPDATE_TIME, MINNUM
+from application.db.DataStore import store_data, sqlhelper
+from application.spider.HtmlDownloader import Html_Downloader
+from application.spider import Html_Parser
+from application.validator import validator, detect_from_db
 
 '''
 这个类的作用是描述爬虫的逻辑

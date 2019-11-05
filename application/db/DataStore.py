@@ -1,16 +1,16 @@
 # coding:utf-8
 import sys
-from config import DB_CONFIG
-from util.exception import Con_DB_Fail
+from application.config import DB_CONFIG
+from application.util import Con_DB_Fail
 
 
 try:
     if DB_CONFIG['DB_CONNECT_TYPE'] == 'pymongo':
-        from db.MongoHelper import MongoHelper as SqlHelper
+        from application.db.MongoHelper import MongoHelper as SqlHelper
     elif DB_CONFIG['DB_CONNECT_TYPE'] == 'redis':
-        from db.RedisHelper import RedisHelper as SqlHelper
+        from application.db import RedisHelper as SqlHelper
     else:
-        from db.SqlHelper import SqlHelper as SqlHelper
+        from application.db import SqlHelper as SqlHelper
     sqlhelper = SqlHelper()
     sqlhelper.init_db()
 except Exception as e:

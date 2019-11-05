@@ -1,6 +1,6 @@
 # coding:utf-8
-from db.SqlHelper import SqlHelper
-from util.exception import Con_DB_Fail
+from application.db import SqlHelper
+from application.util import Con_DB_Fail
 
 try:
     sqlhelper = SqlHelper()

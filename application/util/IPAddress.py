@@ -7,7 +7,7 @@ import socket
 import struct
 
 import logging
-from util.compatibility import text_
+from application.util.compatibility import text_
 
 logger = logging.getLogger('util')
 

@@ -3,9 +3,9 @@ from __future__ import unicode_literals
 
 from redis import Redis
 
-import config
-from db.ISqlHelper import ISqlHelper
-from db.SqlHelper import Proxy
+from application import config
+from application.db import ISqlHelper
+from application.db import Proxy
 
 
 class RedisHelper(ISqlHelper):

@@ -1,11 +1,11 @@
 # coding:utf-8
 
 from multiprocessing import Value, Queue, Process
-from api.apiServer import start_api_server
-from db.DataStore import store_data
+from application.api import start_api_server
+from application.db.DataStore import store_data
 
-from validator.Validator import validator, getMyIP
-from spider.ProxyCrawl import startProxyCrawl
+from application.validator import validator, getMyIP
+from application.spider import startProxyCrawl
 
 if __name__ == "__main__":
     myip = getMyIP()

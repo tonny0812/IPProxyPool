@@ -1,9 +1,8 @@
 # coding:utf-8
 
 import random
-import config
-import json
-from db.DataStore import sqlhelper
+from application import config
+from application.db.DataStore import sqlhelper
 
 __author__ = 'qiye'
 

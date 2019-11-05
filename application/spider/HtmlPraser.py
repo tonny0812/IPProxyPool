@@ -1,9 +1,9 @@
 # coding:utf-8
 import base64
-from config import QQWRY_PATH, CHINA_AREA
-from util.IPAddress import IPAddresss
+from application.config import QQWRY_PATH, CHINA_AREA
+from application.util import IPAddresss
 import re
-from util.compatibility import text_
+from application.util.compatibility import text_
 
 __author__ = 'qiye'
 from lxml import etree

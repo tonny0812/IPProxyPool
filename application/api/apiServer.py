@@ -5,9 +5,8 @@
 import json
 import sys
 import web
-import config
-from db.DataStore import sqlhelper
-from db.SqlHelper import Proxy
+from application import config
+from application.db.DataStore import sqlhelper
 
 urls = (
     '/', 'select',

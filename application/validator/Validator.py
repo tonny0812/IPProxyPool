@@ -13,9 +13,9 @@ import time
 import psutil
 from multiprocessing import Process, Queue
 
-import config
-from db.DataStore import sqlhelper
-from util.exception import Test_URL_Fail
+from application import config
+from application.db.DataStore import sqlhelper
+from application.util import Test_URL_Fail
 
 
 def detect_from_db(myip, proxy, proxies_set):
@@ -88,7 +88,7 @@ def detect_proxy(selfip, proxy, queue2=None):
     ip = proxy['ip']
     port = proxy['port']
     proxies = {"http": "http://%s:%s" % (ip, port), "https": "http://%s:%s" % (ip, port)}
-    protocol, types, speed = getattr(sys.modules[__name__],config.CHECK_PROXY['function'])(selfip, proxies)#checkProxy(selfip, proxies)
+    protocol, types, speed = getattr(sys.modules[__name__], config.CHECK_PROXY['function'])(selfip, proxies)#checkProxy(selfip, proxies)
     if protocol >= 0:
         proxy['protocol'] = protocol
         proxy['type'] = types

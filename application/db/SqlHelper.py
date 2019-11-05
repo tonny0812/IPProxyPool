@@ -1,11 +1,11 @@
 # coding:utf-8
 import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Numeric, create_engine, VARCHAR
+from sqlalchemy import Column, Integer, DateTime, Numeric, create_engine, VARCHAR
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from config import DB_CONFIG, DEFAULT_SCORE
+from application.config import DB_CONFIG, DEFAULT_SCORE
 
-from db.ISqlHelper import ISqlHelper
+from application.db import ISqlHelper
 
 '''
 sql操作的基类

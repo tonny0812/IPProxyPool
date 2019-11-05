@@ -1,7 +1,7 @@
 import pymongo
-from config import DB_CONFIG, DEFAULT_SCORE
+from application.config import DB_CONFIG, DEFAULT_SCORE
 
-from db.ISqlHelper import ISqlHelper
+from application.db import ISqlHelper
 
 
 class MongoHelper(ISqlHelper):

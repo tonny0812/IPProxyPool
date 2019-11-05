@@ -1,7 +1,6 @@
 # coding:utf-8
-from lxml import etree
 import requests
-import config
+from application import config
 
 
 def checkProxyType(selfip, proxies):
