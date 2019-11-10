@@ -16,8 +16,11 @@ from applicationSM.controlnode.Config import BASE_PATH
 
 class ProxyManager(object):
     def __init__(self):
-        self.new_proxies = self.load_progress(BASE_PATH + 'files\\new_proxies.txt')  # 未爬取到的代理集合
-        self.old_proxes = self.load_progress(BASE_PATH +'files\\old_proxies.txt')  # 已爬取到的代理集合
+        # self.new_proxies = self.load_progress(BASE_PATH + 'files\\new_proxies.txt')  # 未爬取到的代理集合
+        # self.old_proxes = self.load_progress(BASE_PATH +'files\\old_proxies.txt')  # 已爬取到的代理集合
+        self.new_proxies = set()
+        self.old_proxes = set()
+        pass
 
     def add_new_proxy(self, proxy):
         '''

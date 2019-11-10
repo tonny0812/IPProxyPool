@@ -8,9 +8,9 @@
 -------------------------------------------------
 """
 from urllib.parse import urlsplit
-from xml import etree
 
 from bs4 import BeautifulSoup
+from lxml import etree
 
 from applicationSM.spidernode.Config import PROXY_TYPE_PARSE
 

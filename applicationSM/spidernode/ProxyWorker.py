@@ -7,6 +7,7 @@
    date：          2019/11/5
 -------------------------------------------------
 """
+import time
 from multiprocessing.managers import BaseManager
 
 from applicationSM.spidernode import Config
@@ -43,16 +44,14 @@ class ProxyWorker(object):
             try:
                 if not self.url_q.empty():
                     url = self.url_q.get()
-                    print(url)
                     if url == 'end':
                         print('控制节点通知爬虫节点停止工作...')
-                        # 接着通知其它节点停止工作
-                        self.result_q.put({'new_urls': 'end', 'data': 'end'})
                         return
                     print('爬虫节点(%s)正在解析:%s' % (self.name, url.encode('utf-8')))
-                    content = self.downloader.download(url)
+                    content = self.downloader.download_with_no_proxies(url)
                     proxies = self.parser.parser(url, content)
-                    self.result_q.put({"name": self.name, "proxies": proxies})
+                    self.result_q.put({"name": self.name, "url": url, "proxies": proxies})
+                    time.sleep(Config.CRAWL_INTERVALS_SEC)
                 else:
                     pass
             except EOFError as e:
